@@ -1,7 +1,8 @@
 import { sharedHead, navbar } from "./layout";
 import { TrendReport } from "../types";
+import type { UserInfo } from "../types";
 
-export function reportDetailPage(report: TrendReport, isAdmin: boolean): string {
+export function reportDetailPage(report: TrendReport, user: UserInfo | null): string {
   const date = new Date(report.generatedAt).toLocaleDateString("ko-KR", {
     year: "numeric", month: "long", day: "numeric",
   });
@@ -10,7 +11,7 @@ export function reportDetailPage(report: TrendReport, isAdmin: boolean): string 
 <html lang="ko">
 <head>${sharedHead(report.keyword + " 트렌드", detailCSS)}</head>
 <body>
-${navbar(isAdmin)}
+${navbar(user)}
 
 <div class="report-hero">
   <div class="container">
@@ -18,14 +19,15 @@ ${navbar(isAdmin)}
     <div class="hero-meta">
       <span class="tag tag-red">${report.keyword}</span>
       <span class="tag tag-gray">최근 ${report.days}일</span>
-      <button class="save-btn-hero" id="saveBtnHero" onclick="toggleSave()">♡ 찜하기</button>
+      ${user
+        ? `<button class="save-btn-hero" id="saveBtnHero" onclick="toggleSave()">♡ 찜하기</button>`
+        : `<a href="/auth/google" class="save-btn-hero">🔒 로그인 후 찜하기</a>`}
     </div>
     <h1 class="hero-title">"${report.keyword}" 트렌드 리포트</h1>
     <p class="hero-date">${date} 생성</p>
   </div>
 </div>
 
-<!-- Trend Summary -->
 <section class="summary-section">
   <div class="container">
     <h2 class="section-label">🔥 트렌드 분석 (by OpenAI)</h2>
@@ -35,7 +37,6 @@ ${navbar(isAdmin)}
   </div>
 </section>
 
-<!-- Top 10 Videos -->
 <section class="videos-section">
   <div class="container">
     <h2 class="section-label">📊 상위 영상 분석 (Top ${report.topVideos.length})</h2>
@@ -64,7 +65,7 @@ ${navbar(isAdmin)}
   </div>
 </section>
 
-<script>
+${user ? `<script>
 const REPORT_ID = '${report.id}';
 function getSaved(){try{return JSON.parse(localStorage.getItem('saved_reports')||'[]')}catch{return[]}}
 function toggleSave(){
@@ -81,7 +82,7 @@ function renderBtn(){
   btn.style.color=saved.includes(REPORT_ID)?'var(--red)':'var(--soft)';
 }
 renderBtn();
-</script>
+</script>` : ""}
 </body>
 </html>`;
 }
@@ -115,7 +116,7 @@ const detailCSS = `
 .hero-meta{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
 .hero-title{font-size:2rem;font-weight:800;margin-bottom:6px;line-height:1.2}
 .hero-date{font-size:.82rem;color:var(--muted)}
-.save-btn-hero{margin-left:auto;padding:6px 16px;border-radius:20px;background:transparent;border:1px solid var(--border);color:var(--soft);font-size:.82rem;font-weight:700;cursor:pointer;transition:all .2s}
+.save-btn-hero{margin-left:auto;padding:6px 16px;border-radius:20px;background:transparent;border:1px solid var(--border);color:var(--soft);font-size:.82rem;font-weight:700;cursor:pointer;transition:all .2s;text-decoration:none;display:inline-flex;align-items:center}
 .save-btn-hero:hover{border-color:var(--red);color:var(--red)}
 .summary-section{padding:32px 0}
 .summary-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:28px 32px}

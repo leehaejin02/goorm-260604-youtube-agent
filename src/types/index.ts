@@ -43,3 +43,10 @@ export interface GlobalInsights {
   globalTrending: TrendingVideo[];
   koreanTrending: TrendingVideo[];
 }
+
+export interface UserInfo {
+  email: string;
+  name: string;
+  picture: string;
+  isAdmin: boolean;
+}

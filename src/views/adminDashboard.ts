@@ -1,12 +1,13 @@
 import { sharedHead, navbar } from "./layout";
 import { ReportMeta } from "../reporter";
+import type { UserInfo } from "../types";
 
-export function adminDashboardPage(reports: ReportMeta[]): string {
+export function adminDashboardPage(reports: ReportMeta[], user: UserInfo): string {
   return `<!DOCTYPE html>
 <html lang="ko">
 <head>${sharedHead("관리자 대시보드", dashCSS)}</head>
 <body>
-${navbar(true)}
+${navbar(user)}
 
 <div class="container dash-wrap">
 
