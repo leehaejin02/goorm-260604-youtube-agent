@@ -17,13 +17,29 @@ export interface VideoStats {
   commentCount: number;
   duration: string;
   thumbnailUrl: string;
-  trendingScore: number; // viewCount / hours_since_published
+  trendingScore: number;
   trendingLabel: "🔥 급상승" | "📈 상승세" | "일반";
 }
 
 export interface TrendReport {
+  id: string;
   generatedAt: string;
   keyword: string;
+  days: number;
   topVideos: VideoStats[];
   trendSummary: string;
+}
+
+export interface TrendingVideo {
+  videoId: string;
+  title: string;
+  channelTitle: string;
+  viewCount: number;
+  thumbnailUrl: string;
+}
+
+export interface GlobalInsights {
+  updatedAt: string;
+  globalTrending: TrendingVideo[];
+  koreanTrending: TrendingVideo[];
 }
