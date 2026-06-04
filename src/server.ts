@@ -171,8 +171,13 @@ app.post("/admin/analyze", requireAdmin, async (req, res) => {
   }
 });
 
-// --- Start ---
-async function main() {
+// --- Initialize ---
+// initAuth는 동기 함수 (bcrypt.hashSync) — 서버리스 콜드 스타트 안전
+initAuth();
+
+// Vercel 서버리스: app을 export, listen 불필요
+// 로컬 개발: listen 호출
+if (!process.env.VERCEL) {
   if (!process.env.YOUTUBE_API_KEY) {
     console.error("❌ YOUTUBE_API_KEY 환경변수가 없습니다.");
     process.exit(1);
@@ -181,17 +186,12 @@ async function main() {
     console.error("❌ OPENAI_API_KEY 환경변수가 없습니다.");
     process.exit(1);
   }
-
-  await initAuth();
-
   app.listen(PORT, () => {
     console.log(`\n🚀 YouTube 트렌드 에이전트 실행 중`);
     console.log(`   http://localhost:${PORT}`);
     console.log(`   관리자: ${process.env.ADMIN_EMAIL ?? "(ADMIN_EMAIL 미설정)"}\n`);
   });
-
-  // 서버 시작 후 백그라운드로 글로벌 인사이트 미리 캐시
   getCachedInsights().catch(() => {});
 }
 
-main();
+export default app;

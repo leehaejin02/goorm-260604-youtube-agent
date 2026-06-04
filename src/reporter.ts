@@ -2,8 +2,10 @@ import fs from "fs";
 import path from "path";
 import { TrendReport } from "./types";
 
-const DATA_DIR = path.resolve(process.cwd(), "reports", "data");
-const MD_DIR = path.resolve(process.cwd(), "reports");
+// Vercel 서버리스는 /tmp 외 파일시스템이 읽기 전용
+const BASE = process.env.VERCEL ? "/tmp" : process.cwd();
+const DATA_DIR = path.join(BASE, "reports", "data");
+const MD_DIR = path.join(BASE, "reports");
 
 export interface ReportMeta {
   id: string;

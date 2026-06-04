@@ -9,21 +9,20 @@ declare module "express-session" {
 
 let adminPasswordHash = "";
 
-export async function initAuth(): Promise<void> {
+// 동기 초기화 — 서버리스 콜드 스타트 호환
+export function initAuth(): void {
   const plain = process.env.ADMIN_PASSWORD ?? "";
   if (!plain) {
     console.warn("⚠️  ADMIN_PASSWORD 환경변수가 설정되지 않았습니다.");
     return;
   }
-  adminPasswordHash = await bcrypt.hash(plain, 10);
+  adminPasswordHash = bcrypt.hashSync(plain, 10);
 }
 
 export async function verifyAdmin(email: string, password: string): Promise<boolean> {
   if (!adminPasswordHash) return false;
-  return (
-    email === (process.env.ADMIN_EMAIL ?? "") &&
-    (await bcrypt.compare(password, adminPasswordHash))
-  );
+  if (email !== (process.env.ADMIN_EMAIL ?? "")) return false;
+  return bcrypt.compare(password, adminPasswordHash);
 }
 
 export function requireAdmin(req: Request, res: Response, next: NextFunction): void {
