@@ -1,5 +1,5 @@
 import OpenAI from "openai";
-import { v4 as uuidv4 } from "uuid";
+import { randomUUID } from "crypto";
 import { searchVideos } from "./searchAgent";
 import { getVideoStats } from "./videoStatsAgent";
 import { saveReport, buildMarkdownReport } from "../reporter";
@@ -54,7 +54,7 @@ export async function runOrchestrator(
   console.log("  ✅ 분석 완료");
 
   const report: TrendReport = {
-    id: uuidv4(),
+    id: randomUUID(),
     generatedAt: new Date().toISOString(),
     keyword,
     days: publishedAfterDays,

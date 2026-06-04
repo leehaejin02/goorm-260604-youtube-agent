@@ -2,7 +2,7 @@ import "dotenv/config";
 import express from "express";
 import session from "express-session";
 import OpenAI from "openai";
-import { v4 as uuidv4 } from "uuid";
+import { randomUUID } from "crypto";
 import { initAuth, verifyAdmin, requireAdmin } from "./auth";
 import { saveReport, getAllReports, getReportById } from "./reporter";
 import { getGlobalInsights } from "./agents/globalInsightsAgent";
@@ -154,7 +154,7 @@ app.post("/admin/analyze", requireAdmin, async (req, res) => {
     const trendSummary = completion.choices[0].message.content ?? "";
 
     const report = {
-      id: uuidv4(),
+      id: randomUUID(),
       generatedAt: new Date().toISOString(),
       keyword,
       days: Number(days),
