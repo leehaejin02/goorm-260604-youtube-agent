@@ -4,6 +4,7 @@ export function sharedHead(title: string, extraCSS = ""): string {
   return `<meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>${title} — YT Trend</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23ff3b3b'/><polygon points='10,8 26,16 10,24' fill='white'/></svg>" />
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
   :root{
@@ -69,7 +70,7 @@ function loggedInNav(user: UserInfo): string {
   return `
     ${user.isAdmin ? `<a href="/admin" class="btn admin-badge">⚙ 관리자</a>` : ""}
     <div class="user-chip">
-      ${user.picture ? `<img src="${user.picture}" class="user-avatar" alt="${user.name}" />` : ""}
+      ${user.picture ? `<img src="${user.picture}" class="user-avatar" alt="${user.name}" referrerpolicy="no-referrer" />` : ""}
       <span class="user-name">${user.name}</span>
     </div>
     <form method="POST" action="/auth/logout" style="margin:0">
